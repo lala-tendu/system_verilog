@@ -1,0 +1,78 @@
+module top;
+  int intda[];
+  int intda1[];
+  int len, position;
+  
+  initial begin
+    intda=new[10];//allocates the memory
+    
+    //assign 10 random values between 20 to 40 to the array
+    foreach(intda[i])begin
+      intda[i]=$urandom_range(20,40);
+    end
+    $display("intda=%p",intda);//print all elements at aonce
+    
+    //print elemnts on index basis
+    foreach(intda[i])begin
+      $display("intda[%0d]=%0d",i,intda[i]);
+    end
+    
+    //increase the size while preserving(retaining) existing values
+    intda = new[15](intda);
+    $display("intda=%p",intda);
+    
+    //assign to new array, intitial 5 elements only
+    intda1 = new[5](intda);
+    $display("intda1=%p",intda1);
+    
+    //delete
+    intda1.delete();//all elements are deleted in the array
+    $display("intda1=%p",intda1);
+    
+    //how to delete an element at specific location
+    position = 5;
+    len = intda.size();
+    intda1 = new[len-1];
+    for(int i=0;i<len-1;i++)begin
+      if(i==position)$display("deleting %0d at index =%0d",intda[i],i);
+      //fill new array
+      if(i<position)intda1[i]=intda[i];
+      else intda1[i]=intda[i+1];
+    end
+    intda=new[len-1](intda1);
+    $display("intda after deleting=%p",intda);
+      
+    
+    //size
+    $display("size=%p",intda1.size());
+    
+    //how to insert element at specific location
+    len=intda.size();
+    intda1=new[len+1];
+    position = 5;
+    for(int i=0;i<len+1;i++)begin
+      if(i<position)intda1[i]=intda[i];
+      else if(i==position)intda1[i]=75;
+      else intda1[i]=intda[i-1];
+    end
+    intda=new[len+1](intda1);
+    $display("intda after insert 75 at index =%p",intda);
+    
+    //how to get only even indexvalue
+    foreach(intda[i])begin
+      if(i%2==0)$display("intda[%0d]=%0d",i,intda[i]);
+    end
+    
+    //how to reverse all the elements
+    intda.reverse();
+    $display("intda after reverse =%p",intda);
+    
+    //copy last 6 elements only
+    intda1=new[6];
+    for(int i=0;i<6;i++)begin
+      intda1[i]=intda[len-6+i];//i=1=>17-0-6=11
+    end
+    $display("intda last 6 elements copied =%p",intda1);
+     
+  end 
+endmodule
